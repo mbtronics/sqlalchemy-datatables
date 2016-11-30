@@ -153,7 +153,7 @@ class DataTables:
     :returns: a DataTables object
     """
 
-    def __init__(self, request, sqla_object, query, columns, dialect=None):
+    def __init__(self, request, sqla_object, query, columns, dialect=None, limit=None):
         """Initialize object and run the query."""
         self.request_values, self.legacy = DataTables.prepare_arguments(
             request)
@@ -162,6 +162,7 @@ class DataTables:
         self.columns = columns
         self.results = None
         self.dialect = dialect
+        self.limit = limit
 
         # total in the table after filtering
         self.cardinality_filtered = 0
@@ -208,7 +209,7 @@ class DataTables:
 
         output[echo] = str(int(self.request_values[echo]))
         output[totalRecords] = str(self.cardinality)
-        output[totalDisplayRecords] = str(self.cardinality_filtered)
+        output[totalDisplayRecords] = str(self.limit if self.limit else self.cardinality_filtered)
 
         output[data] = self.results
 
